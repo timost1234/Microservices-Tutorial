@@ -1,91 +1,59 @@
-import React, {useState} from "react";
-import {
-  Form,
-  Select,
-  InputNumber,
-  DatePicker,
-  Switch,
-  Slider,
-  Button,
-  Rate,
-  Upload,
-  Typography,
-  Space,
-  Divider,
-  message,
-} from "antd";
-import { InboxOutlined } from "@ant-design/icons";
-import "./App.less";
-
-const { Dragger } = Upload;
+import React, { useState } from "react";
+import { Basic as Dropzone } from "./Components/DropZone.js";
 
 const App = () => {
-  const [fileList, setFileList] = useState([
-  ]);
-
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const [image, setImage] = useState(null);
+  const onResetHandler = () => {
+    setImage(null);
   };
-
-  const onPreview = async (file) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow.document.write(image.outerHTML);
+  const onPredictHandler = () => {
+    console.log(image);
+    
+    
   };
 
   return (
-    <>
-      <div className="bg-blue-500 flex justify-center h-screen w-screen">
-        <div className="bg-white flex-col self-center w-96 rounded-lg shadow-xl px-5">
-          <p className="mt-4 text-center font-mono text-blue-500 text-3xl font-extrabold">
-            WOOD CLASSIFIER
-          </p>
-          <div className="w-full mt-2">
-            <Dragger
-              action=""
-              listType="picture"
-              fileList={fileList}
-              onChange={onChange}
-              onPreview={onPreview}
-            >
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
+    <div className="flex flex-col h-full items-center justify-center bg-blue-500 select-none">
+      <div className="flex flex-col items-center bg-white w-96 rounded-lg shadow-xl py-5 px-8">
+        <p className="uppercase text-center font-mono text-blue-500 text-3xl font-extrabold">
+          wood classifer
+        </p>
+        <p className="mt-4 text-gray-700 text-justify text-sm">
+          This is an APP that demenstrates how to connect a frontend web page to
+          a backend server through API calls.
+        </p>
+
+        <div className="mt-4 w-full">
+          {!image && <Dropzone setImage={setImage} />}
+          {image && (
+            <>
+              <p className="text-sm uppercase font-medium mb-2">
+                👇 your image
               </p>
-              <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Support only for a single upload.
-              </p>
-            </Dragger>
-          </div>
-          <div className="flex my-5 justify-end gap-2">
-            <button
-              type="button"
-              class="w-24 text-lg bg-gray-400 rounded-md p-1 items-center justify-center text-white hover:bg-gray-300 focus:outline-none"
-            >
-              Reset
-            </button>
-            <button
-              type="button"
-              class="w-24 text-lg bg-yellow-400 rounded-md p-1 items-center justify-center text-white hover:bg-yellow-300 focus:outline-none"
-            >
-              Predict!
-            </button>
-          </div>
+              <img className="rounded-md w-full" src={image} />
+            </>
+          )}
         </div>
-        {/* <p className="flex text-blue-200 text-center items-center justify-center">© 2020 Kuan-Ting</p> */}
+
+        <div className="flex ml-auto mt-4 gap-2">
+          <button
+            type="button"
+            onClick={onResetHandler}
+            class="w-24 transition duration-200 text-md bg-gray-400 rounded-md p-1 items-center justify-center text-white hover:bg-gray-300 focus:outline-none"
+          >
+            Reset
+          </button>
+          <button
+            type="button"
+            onClick={onPredictHandler}
+            class="w-24 transition duration-200 text-md bg-yellow-400 rounded-md p-1 items-center justify-center text-white hover:bg-yellow-300 focus:outline-none"
+          >
+            Predict!
+          </button>
+        </div>
       </div>
-    </>
+      <span className="mt-2 text-sm text-blue-300">© 2021 Kuan-Ting</span>
+    </div>
   );
 };
 
