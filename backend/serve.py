@@ -13,7 +13,6 @@ import tensorflow.keras as keras
 import numpy as np
 
 
-
 def base64_to_rgb(base64_str):
 
     if isinstance(base64_str, bytes):
@@ -25,21 +24,19 @@ def base64_to_rgb(base64_str):
 
 
 app = Flask(__name__)
+app.config["DEBUG"] = True
 CORS(app)
 
-@app.route("/v1/models/wood-iz_224-dr_0.3-lr_0.01:classify/", methods=['POST'])
+@app.route("/predict/", methods=['POST'])
 def get_classify():
-
+    print(request)
     result = request.get_json(silent=True)
-    base = result['examples'][0]['image']['b64']
-
     
-
-    img = base64_to_rgb(base)
+    img = base64_to_rgb(result)
     prediction = predict(img)
 
     return jsonify(prediction)
-
+    
 
 def predict(img):
 
@@ -59,7 +56,12 @@ def predict(img):
     predictions = model.predict(img)
     score = tf.nn.softmax(predictions[0]).numpy()
 
-    result = {"result": [[['MaSx', str(score[0])], ['PcSx', str(score[1])], ['TgSx', str(score[2])], ['UpSx', str(score[3])], ['ZsSx', str(score[4])]]]}
+    result = {"result": 
+    [[['MaSx', str(score[0])], 
+    ['PcSx', str(score[1])], 
+    ['TgSx', str(score[2])], 
+    ['UpSx', str(score[3])], 
+    ['ZsSx', str(score[4])]]]}
     
     print(
     "This image most likely belongs to {} with a {:.2f} percent confidence."
