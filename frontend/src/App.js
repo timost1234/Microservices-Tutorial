@@ -1,28 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Basic as Dropzone } from "./Components/DropZone.js";
 import { FiExternalLink } from "react-icons/fi";
 import { VscLoading } from "react-icons/vsc";
+
+const species = [
+  {
+    id: "MaSx",
+    sciName: "Melia azedarach",
+    commonName: "Chinaberry Tree",
+    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5pjmw%3D%3D",
+  },
+  {
+    id: "PcSx",
+    sciName: "Pistacia chinensis",
+    commonName: "Chinese Pistache",
+    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tgmQ%3D%3D",
+  },
+  {
+    id: "TgSx",
+    sciName: "Tectona grandis",
+    commonName: "Teak",
+    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tjlQ%3D%3D",
+  },
+  {
+    id: "UpSx",
+    sciName: "Ulmus parvifolia",
+    commonName: "Chinese Elm",
+    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tjnQ%3D%3D",
+  },
+  {
+    id: "ZsSx",
+    sciName: "Zelkova serrata",
+    commonName: "Japanese Elm",
+    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tkmA%3D%3D",
+  },
+];
 
 const App = () => {
   const [image, setImage] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  let species = [];
-  useEffect(() => {
-    fetch("http://localhost:5000/species", {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-    })
-      .then((res) => res.json())
-      .catch((error) => console.error("Error:", error))
-      .then((response) => {
-        console.log("Success:", response);
-        species = response;
-      });
-  });
 
   const onResetHandler = () => {
     setImage(null);

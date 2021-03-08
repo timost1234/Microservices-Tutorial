@@ -12,38 +12,6 @@ import tensorflow.keras as keras
 
 import numpy as np
 
-species = [
-  {
-    "id": "MaSx",
-    "sciName": "Melia azedarach",
-    "commonName": "Chinaberry Tree",
-    "link": "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5pjmw%3D%3D",
-  },
-  {
-    "id": "PcSx",
-    "sciName": "Pistacia chinensis",
-    "commonName": "Chinese Pistache",
-    "link": "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tgmQ%3D%3D",
-  },
-  {
-    "id": "TgSx",
-    "sciName": "Tectona grandis",
-    "commonName": "Teak",
-    "link": "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tjlQ%3D%3D",
-  },
-  {
-    "id": "UpSx",
-    "sciName": "Ulmus parvifolia",
-    "commonName": "Chinese Elm",
-    "link": "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tjnQ%3D%3D",
-  },
-  {
-    "id": "ZsSx",
-    "sciName": "Zelkova serrata",
-    "commonName": "Japanese Elm",
-    "link": "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tkmA%3D%3D",
-  },
-]
 
 def base64_to_rgb(base64_str):
 
@@ -69,9 +37,6 @@ def post_classify():
 
     return jsonify(prediction)
 
-@app.route("/species", methods=['GET'])
-def get_species():
-    return jsonify(species)
 
 def predict(img):
 
