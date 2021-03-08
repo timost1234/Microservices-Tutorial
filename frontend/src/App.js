@@ -1,45 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Basic as Dropzone } from "./Components/DropZone.js";
-import { FiExternalLink } from 'react-icons/fi';
-import { VscLoading } from 'react-icons/vsc'
-
-const species = [
-  {
-    id: "MaSx",
-    sciName: "Melia azedarach",
-    commonName: "Chinaberry Tree",
-    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5pjmw%3D%3D"
-  },
-  {
-    id: "PcSx",
-    sciName: "Pistacia chinensis",
-    commonName: "Chinese pistache",
-    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tgmQ%3D%3D"
-  },
-  {
-    id: "TgSx",
-    sciName: "Tectona grandis",
-    commonName: "Teak",
-    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tjlQ%3D%3D"
-  },
-  {
-    id: "UpSx",
-    sciName: "Ulmus parvifolia",
-    commonName: "Chinese Elm",
-    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tjnQ%3D%3D"
-  },
-  {
-    id: "ZsSx",
-    sciName: "Zelkova serrata",
-    commonName: "Japanese Elm",
-    link: "https://woodsearch.tfri.gov.tw/wood.php?c=2MrFn5tkmA%3D%3D"
-  },
-];
+import { FiExternalLink } from "react-icons/fi";
+import { VscLoading } from "react-icons/vsc";
 
 const App = () => {
   const [image, setImage] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  let species = [];
+  useEffect(() => {
+    fetch("http://localhost:5000/species", {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    })
+      .then((res) => res.json())
+      .catch((error) => console.error("Error:", error))
+      .then((response) => {
+        console.log("Success:", response);
+        species = response;
+      });
+  });
 
   const onResetHandler = () => {
     setImage(null);
@@ -49,7 +32,7 @@ const App = () => {
     // console.log(image);
     // TODO
 
-    const url = "http://localhost:5000/predict/";
+    const url = "http://localhost:5000/predict";
     setLoading(true);
     fetch(url, {
       method: "POST",
@@ -86,7 +69,7 @@ const App = () => {
 
         <div className="mt-4 w-full">
           {!image && <Dropzone setImage={setImage} />}
-          {(image && !result && !loading) && (
+          {image && !result && !loading && (
             <>
               <p className="text-sm uppercase font-medium mb-2">
                 👇 your image
@@ -94,16 +77,13 @@ const App = () => {
               <img className="rounded-md w-full" src={image} />
             </>
           )}
-          {
-            loading && (
-              <><VscLoading className="my-4 mx-auto text-gray-500 text-3xl animate-spin"/></>
-            )
-          }
-          {(result && !loading) && (
+          {loading && (
             <>
-              <p className="text-sm font-medium text-justify mb-2">
-                The results are ..
-              </p>
+              <VscLoading className="my-4 mx-auto text-gray-500 text-3xl animate-spin" />
+            </>
+          )}
+          {result && !loading && (
+            <>
               <div className="flex gap-4">
                 <div className="w-4/12">
                   <img className="rounded-md w-full" src={image} />
@@ -115,7 +95,13 @@ const App = () => {
                         {index + 1}{" "}
                         {species.find((s) => s.id == result[0]).commonName}
                       </div>
-                      <a className="text-blue-500 my-auto" target="_new" href={species.find((s) => s.id == result[0]).link}><FiExternalLink /></a>
+                      <a
+                        className="text-blue-500 my-auto"
+                        target="_new"
+                        href={species.find((s) => s.id == result[0]).link}
+                      >
+                        <FiExternalLink />
+                      </a>
                     </div>
                   ))}
                 </div>
@@ -132,7 +118,7 @@ const App = () => {
           >
             Reset
           </button>
-          {(!result && !loading) && (
+          {!result && !loading && (
             <button
               type="button"
               onClick={onPredictHandler}
